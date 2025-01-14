@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "178131500345",
+    "project_id": "skoolinqq",
+    "storage_bucket": "skoolinqq.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178131500345:android:4e5ffa4fc98cea91dc3ce8",
+        "android_client_info": {
+          "package_name": "com.example.skoolinq_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoDf74QD_D6Aj-q047d45jv8MQQCJVlM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
