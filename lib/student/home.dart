@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                 List<DocumentSnapshot> documentSnapshot = querySnapshot.docs;
 
                 return StreamBuilder(
-                    stream: dbService.Mentors(Class:data["class"]),
+                    stream: dbService.Mentors(Class:int.parse(data["class"])),
                     builder: (context, mentorSnapshot) {
                       if (!mentorSnapshot.hasData) return Loading();
 

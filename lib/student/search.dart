@@ -44,7 +44,7 @@ class _SearchState extends State<Search> {
 
 
                    search.text.isEmpty? StreamBuilder(
-                      stream: dbService.Mentors(Class: data["class"]),
+                      stream: dbService.Mentors(Class: int.parse(data["class"])),
                       builder: (context, mentorSnapshot) {
                         if (!mentorSnapshot.hasData) return Loading();
 

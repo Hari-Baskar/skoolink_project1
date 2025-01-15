@@ -28,10 +28,7 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     // Filter groups based on search query
-    List<Map<String, String>> filteredGroups = groups
-        .where((group) =>
-        group["name"]!.toLowerCase().contains(searchQuery.toLowerCase()))
-        .toList();
+
     final user = Provider.of<User?>(context);
     return StreamBuilder(
         stream: dbService.checkDocument(user!.uid),
@@ -107,10 +104,7 @@ class _ChatState extends State<Chat> {
                                 // Combine all elements into a single string
                                 String combinedString = docc.join("");
                                 await FirebaseFirestore.instance.collection(
-                                    combinedString).doc("1").set({
-                                  "sk": "sl"
-                                }
-                                );
+                                    combinedString);
                               },
                               child:ListTile(
                             leading: Icon(Icons.group, color: Colors.white),

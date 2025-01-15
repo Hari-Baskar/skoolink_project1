@@ -46,6 +46,12 @@ class _LoginScreenState extends State<LoginScreen> {
           setState(() {
             _verificationId = verificationId;
           });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OptScreen(verifyId: _verificationId!),
+            ),
+          );
           print("Code sent to ${_phoneController.text}");
         },
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -55,10 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         },
       );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => OptScreen(verifyId:_verificationId)),
-      );
+
     }
   }
 

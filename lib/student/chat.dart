@@ -55,12 +55,14 @@ class _ChatPageState extends State<ChatPage> {
         filteredStudents = students;
       } else {
         filteredMentors = mentors
-            .where((mentor) => mentor
+            .where((mentor) =>
+            mentor
                 .toLowerCase()
                 .contains(searchController.text.toLowerCase()))
             .toList();
         filteredStudents = students
-            .where((student) => student
+            .where((student) =>
+            student
                 .toLowerCase()
                 .contains(searchController.text.toLowerCase()))
             .toList();
@@ -92,70 +94,137 @@ class _ChatPageState extends State<ChatPage> {
           if (!snapshota.hasData) return Loading();
 
           DocumentSnapshot document = snapshota.data;
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          Map<String, dynamic> mentor = document.data() as Map<String, dynamic>;
           return Scaffold(
-              backgroundColor: Color(0xFF343434),
+              backgroundColor: Color(0xFF202124),
+              appBar: AppBar(
+                backgroundColor: Color(0xFF202124),
+                title: Text(
+                  'Chats',
+                  style: TextStyle(color: Colors.white),
+                ),
 
+              ),
               body: StreamBuilder(
-                  stream: dbService.users(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return Loading();
-                    QuerySnapshot querySnapshot = snapshot.data;
-                    List<DocumentSnapshot> users = querySnapshot.docs;
+                  stream: dbService.users(), builder: (context, snapshot) {
+                if (!snapshot.hasData) return Loading();
+                QuerySnapshot querySnapshot = snapshot.data;
+                List<DocumentSnapshot> documents = querySnapshot.docs;
 
-                    return SafeArea(child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Chats ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                return SingleChildScrollView(child: Column(
+                  children: [
+                    /* Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search, color: Colors.white),
+                          hintText: 'Search',
+                          hintStyle: TextStyle(
+                              color: Colors.white.withOpacity(0.2)),
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.2),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
                           ),
-                          // Tabs for "Mentors" and "Students"
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: users.length,
-                              itemBuilder: (context, index) {
-                                Map<String, dynamic> usersdata =
-                                    users[index].data() as Map<String, dynamic>;
-                                return data["accepted"]
-                                        .contains(usersdata["uid"])
-                                    ? InkWell(
-                                        onTap: () {
-                                          List docc=[user!.uid,usersdata["uid"]];
-                                          docc.sort();
-                                          String combinedString = docc.join("");
-                                          print(combinedString);
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatUI(groupName: combinedString,name:usersdata["name"])));
-                                        },
-                                        child: Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: ListTile(
-                                              leading: CircleAvatar(
-                                                  child: usersdata["role"] ==
-                                                          "Student"
-                                                      ? Text("S")
-                                                      : Text("M")),
-                                              title: Text(
-                                                usersdata["name"],
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            )))
-                                    : SizedBox();
-                              })
-                        ],
+                        ),
+                        style: TextStyle(color: Colors.black),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                          });
+                        },
                       ),
-                    )
-                    );
-                  }));
-        });
+                    ),*/
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> data = documents[index]
+                            .data() as Map<String, dynamic>;
+                        print(data["uid"]);
+                        return mentor['requested'].contains(data["uid"])
+                            ? InkWell(
+                            onTap: () async {
+                              await FirebaseFirestore.instance.collection(
+                                  "users").doc(user!.uid).update({
+                                "requested": FieldValue.arrayRemove(
+                                    [data["uid"]]),
+                                "accepted": FieldValue.arrayUnion(
+                                    [data["uid"]]),
+                              });
+                              await FirebaseFirestore.instance.collection(
+                                  "users").doc(data["uid"]).update({
+                                "accepted": FieldValue.arrayUnion([user!.uid])
+                              });
+                              List docc = [data["uid"], user!.uid];
+                              docc.sort();
+
+                              // Combine all elements into a single string
+                              String combinedString = docc.join("");
+                              await FirebaseFirestore.instance.collection(
+                                  combinedString);
+                            },
+                            child: ListTile(
+                              leading: Icon(Icons.group, color: Colors.white),
+                              title: Text(
+                                data["name"]!,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              subtitle: Text(
+                                "Status: Requested",
+                                style: TextStyle(color: Colors.white),
+                              ),
+
+                            ))
+                            : mentor["accepted"].contains(data["uid"])
+                            ? InkWell(
+                            onTap: () {},
+                            child: ListTile(
+                              leading: Icon(Icons.group, color: Colors.white),
+                              title: Text(
+                                data["name"]!,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              subtitle: Text(
+                                "Status: Accepted",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onTap: () {
+                                // Navigate to the chat screen when a group is tapped
+                                List docc = [data["uid"], user!.uid];
+                                docc.sort();
+
+                                // Combine all elements into a single string
+                                String combinedString = docc.join("");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChatUI(name: data["name"],
+                                              groupName: combinedString)
+                                  ),
+                                );
+                              },
+                            ))
+                            :
+                        SizedBox();
+                      },
+                    ),
+
+                  ],
+                )
+                );
+              }
+              )
+          );
+        }
+    );
   }
+
+  // Filter Dialog
+
+
+  // Status Dialog
+
 }

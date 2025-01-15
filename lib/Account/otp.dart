@@ -14,6 +14,7 @@ class _OptScreenState extends State<OptScreen> {
 TextEditingController _otpController=TextEditingController();
 final _auth=FirebaseAuth.instance;
   Future<void> verifyOtp() async {
+
     if (widget.verifyId != null) {
       try {
         PhoneAuthCredential credential = PhoneAuthProvider.credential(
