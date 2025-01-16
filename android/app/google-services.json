@@ -12,7 +12,20 @@
           "package_name": "com.example.skoolinq_project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "178131500345-vjfcvc6ubj2veubr17kdcb925ahaqbpe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.skoolinq_project",
+            "certificate_hash": "2cb9d363e91ff9e582712dfd68f9ed9c339e7fc2"
+          }
+        },
+        {
+          "client_id": "178131500345-02utk6oanbjb1j5iumgagb40639mlmas.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCoDf74QD_D6Aj-q047d45jv8MQQCJVlM4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "178131500345-02utk6oanbjb1j5iumgagb40639mlmas.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
